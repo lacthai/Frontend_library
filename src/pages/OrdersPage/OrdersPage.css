@@ -1,0 +1,24 @@
+.no_order-container {
+    height: 150vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: aliceblue;
+}
+
+.order_img {
+    width: 100%;
+    background-image: url("https://static.vecteezy.com/system/resources/previews/015/369/844/original/library-interior-empty-room-for-books-reading-free-vector.jpg");
+    background-repeat: none;
+    background-size: cover;
+    height: 300px;
+    border-radius: 25px;
+}
+
+.order_title {
+    margin: 20px 0;
+    font-weight: 800;
+    letter-spacing: 5px;
+}

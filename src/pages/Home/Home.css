@@ -1,0 +1,66 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
+
+.layout_banner {
+    display: flex !important;
+    justify-content: space-around;
+    height: 400px;
+    width: 100%;
+}
+
+
+
+
+.banner_desc {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    width: 40%;
+    margin: 0 35px;
+}
+
+.banner_desc h1 {
+    font-family: 'Anton', sans-serif;
+    font-size: 2.2rem;
+    text-transform: uppercase;
+}
+
+
+.banner_img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 60%;
+}
+
+.banner_img img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 25px;
+}
+
+.slick-dots {
+    width: 20% !important;
+    left: 50%;
+    bottom: 20% !important;
+    transform: translateX(-50%);
+    background-color: gainsboro;
+    height: 35px;
+    border-radius: 25px;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+.slick-dots li button:before {
+    font-size: 1rem !important;
+}
+
+.slick-dots li.slick-active button:before {
+    color: #ffffff !important;
+}
+
+.slick-prev, .slick-next {
+    display: none !important;
+}
