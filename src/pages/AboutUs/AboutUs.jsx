@@ -2,7 +2,7 @@ import React from "react";
 import { Container } from "react-bootstrap";
 import flower1 from "./flower_header_1.png";
 import flower2 from "./flower_header_2.png";
-import banner1 from "./body.jpg";
+import banner1 from "./book.jpg";
 import { GiTechnoHeart, GiCursedStar, GiCartwheel } from "react-icons/gi";
 import { RiDoubleQuotesL } from "react-icons/ri";
 import {FiChevronDown} from "react-icons/fi";

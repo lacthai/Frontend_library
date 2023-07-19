@@ -49,7 +49,7 @@ const Topbar = () => {
   }, []);
 
   return (
-    <Box className="flex justify-end bg-[#141b2d] dark:bg-white relative"  p={2} ref={ref}>
+    <Box className="flex justify-end bg-[#141b2d] dark:bg-[#f8fafb] relative"  p={2} ref={ref}>
       {/* SEARCH BAR */}
       {/* <Box
         display="flex"

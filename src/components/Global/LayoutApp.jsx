@@ -14,7 +14,7 @@ export const LayoutApp = ({ children }) => {
           <CssBaseline />
           <div className="app">
             <Sidebar isSidebar={isSidebar}/>
-            <main className="content bg-[#141b2d] dark:bg-white ">
+            <main className="content bg-[#141b2d] dark:bg-[#f8fafb] ">
               <Topbar setIsSidebar={setIsSidebar} />
               {children}
             </main>

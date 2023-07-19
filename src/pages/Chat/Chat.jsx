@@ -1,50 +1,112 @@
-import React, { useEffect, useState, useRef } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import React, { useRef, useState } from "react";
+
+import ChatContainer from "../../components/ChatContainer/ChatContainer";
+import ContactChat from "../../components/ContactChat/ContactChat";
+// import LogoSearch from "../../components/LogoSearch/LogoSearch";
+// import NavIcons from "../../components/NavIcons/NavIcons";
+import "./Chat.css";
+import { useEffect } from "react";
+import { useUserChatsMutation } from "../../services/appApi";
+import { useDispatch, useSelector } from "react-redux";
 import { io } from "socket.io-client";
 
-import { BsFillSunFill, BsMoonStarsFill } from "react-icons/bs";
-import { AiFillSetting } from "react-icons/ai";
-import WelcomeChat from "../../components/WelcomeChat/WelcomeChat";
-import ContactChat from "../../components/ContactChat/ContactChat";
-import ChatContainer from "../../components/ChatContainer/ChatContainer";
-
 const Chat = () => {
-
+  const dispatch = useDispatch();
   const socket = useRef();
-  const [contacts, setContacts] = useState([]);
-  const [currentChat, setCurrentChat] = useState(undefined);
-  const [currentUser, setCurrentUser] = useState(undefined);
+  const { user } = useSelector((state) => state.authReducer.user);
 
-
-
-
+  const [chats, setChats] = useState([]);
+  const [onlineUsers, setOnlineUsers] = useState([]);
+  const [currentChat, setCurrentChat] = useState(null);
+  const [sendMessage, setSendMessage] = useState(null);
+  const [receivedMessage, setReceivedMessage] = useState(null);
+  const [userChat, {isLoading}] = useUserChatsMutation({})
+  // Get the chat in chat section
   useEffect(() => {
-    if (currentUser) {
-      socket.current = io("https://chat-real-time-hgic.onrender.com");
-      socket.current.emit("add-user", currentUser._id);
+    const getChats = async () => {
+      try {
+        const { data } = await userChat(user._id);
+        setChats(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getChats();
+  }, [user._id]);
+
+  // Connect to Socket.io
+  useEffect(() => {
+    socket.current = io("ws://localhost:8800");
+    socket.current.emit("new-user-add", user._id);
+    socket.current.on("get-users", (users) => {
+      setOnlineUsers(users);
+    });
+  }, [user]);
+
+  // Send Message to socket server
+  useEffect(() => {
+    if (sendMessage!==null) {
+      socket.current.emit("send-message", sendMessage);}
+  }, [sendMessage]);
+
+
+  // Get the message from socket server
+  useEffect(() => {
+    socket.current.on("recieve-message", (data) => {
+      console.log(data)
+      setReceivedMessage(data);
     }
-  }, [currentUser]);
+
+    );
+  }, []);
 
 
-  const handleChatChange = (chat) => {
-    setCurrentChat(chat);
+  const checkOnlineStatus = (chat) => {
+    const chatMember = chat.members.find((member) => member !== user._id);
+    const online = onlineUsers.find((user) => user.userId === chatMember);
+    return online ? true : false;
   };
+
   return (
-    <>
-      <div className="dark:bg-[#131324] bg-[#fff8dc]">
-        <div className="container">
-          <ContactChat contacts={contacts} changeChat={handleChatChange} />
-          {currentChat === undefined ? (
-            <WelcomeChat />
-          ) : (
-            <ChatContainer currentChat={currentChat} socket={socket} />
-          )}
+    <div className="Chat">
+      {/* Left Side */}
+      <div className="Left-side-chat">
+        {/* <LogoSearch /> */}
+        <div className="Chat-container">
+          <h2>Chats</h2>
+          <div className="Chat-list">
+            {chats.map((chat) => (
+              <div
+                onClick={() => {
+                  setCurrentChat(chat);
+                }}
+              >
+                <ContactChat
+                  data={chat}
+                  currentUser={user._id}
+                  online={checkOnlineStatus(chat)}
+                />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
-    </>
+
+      {/* Right Side */}
+
+      <div className="Right-side-chat">
+        {/* <div style={{ width: "20rem", alignSelf: "flex-end" }}>
+          <NavIcons />
+        </div> */}
+        <ChatContainer
+          chat={currentChat}
+          currentUser={user._id}
+          setSendMessage={setSendMessage}
+          receivedMessage={receivedMessage}
+        />
+      </div>
+    </div>
   );
 };
-
 
 export default Chat;

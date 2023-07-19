@@ -15,7 +15,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import bcrypt from "bcryptjs";
-import { updateProfileAsync } from "../../features/userSlice";
+// import { updateUserProfile } from "../../features/userSlice";
+
+
 
 const UpdateProfile = () => {
   const user = useSelector((state) => state.user);
@@ -36,7 +38,7 @@ const UpdateProfile = () => {
   const handleClose4 = () => setShow4(false);
   const handleShow4 = () => setShow4(true);
 
-  const [name, setName] = useState('');
+  const [name, setName] = useState(user.name);
   const [password, setPassword] = useState('');
   const [photoURL, setPhotoURL] = useState(null);
 
@@ -44,15 +46,20 @@ const UpdateProfile = () => {
   const handlePasswordChange = (event) => setPassword(event.target.value);
   const handleAvatarChange = (event) => setPhotoURL(event.target.files[0]);
 
+  const handleProfileUpdate = async () => {
+    const userId = user._id; // Replace with the actual user ID
+    const updatedData = { name };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const formData = new FormData();
-    if (name) formData.append('name', name);
-    if (password) formData.append('password', password);
-    if (photoURL) formData.append('avatar', photoURL, photoURL.name);
-    dispatch(updateProfileAsync(formData));
+    try {
+      const response = await axios.put(`/users/${userId}/updateprofile`, updatedData);
+      const updatedUser = response.data;
+      // Handle the updated user data as needed
+      console.log('User updated:', updatedUser);
+    } catch (error) {
+      console.error('Error updating user:', error);
+    }
   };
+ 
 
   const OnCrop = (view) => {
     setImgCrop(view);
@@ -123,7 +130,7 @@ const UpdateProfile = () => {
                 <Modal.Header closeButton>
                   <Modal.Title>Change Your Name</Modal.Title>
                 </Modal.Header>
-                <Form onSubmit={handleSubmit}>
+                <Form onSubmit={handleProfileUpdate}>
                   <Modal.Body>
                     <Form.Group as={Row} className="mb-3">
                       <Form.Label column sm="3">
@@ -135,7 +142,7 @@ const UpdateProfile = () => {
                           placeholder="New Name"
                           value={name}
                           required
-                          onChange={handleNameChange}
+                          onChange={(e) => setName(e.target.value)}
                         />
                       </Col>
                     </Form.Group>
@@ -160,7 +167,7 @@ const UpdateProfile = () => {
                 <Modal.Header closeButton>
                   <Modal.Title>Change Password</Modal.Title>
                 </Modal.Header>
-                <Form onSubmit={handleSubmit}>
+                <Form >
                   <Modal.Body>
                     <Form.Group as={Row} className="mb-3">
                       <Form.Label column sm="4">

@@ -42,28 +42,28 @@ function OrdersPage() {
         <Container className="mb-lg-5 h-[120vh]">
             <div className="order_img"></div>
             <h1 className="text-center order_title text-[#ffffff] dark:text-black">Your orders</h1>
-            <Table responsive striped bordered hover className="text-[#ffffff]">
+            <Table responsive striped bordered hover className="text-[#ffffff] dark:text-black">
                 <thead>
                     <tr>
                         <th>ID</th>
                         <th>Status</th>
                         <th>Date Borrow</th>
                         <th>Date Return</th>
-                        <th>Total</th>
+                        <th>Total Book</th>
                     </tr>
                 </thead>
                 <tbody>
                     {orders.map((order) => (
                         <tr>
-                            <td className="text-[#ffffff]">{order._id}</td>
+                            <td className="text-[#ffffff] dark:text-black">{order._id}</td>
                             <td>
                                 <Badge bg={`${order.status === "processing" ? "warning" : "success"}`} text="white">
                                     {order.status}
                                 </Badge>
                             </td>
-                            <td className="text-[#ffffff]">{order.borrowDate}</td>
-                            <td className="text-[#ffffff]">{order.returnDate}</td>
-                            <td className="text-[#ffffff]">${order.total}</td>
+                            <td className="text-[#ffffff] dark:text-black">{order.borrowDate}</td>
+                            <td className="text-[#ffffff] dark:text-black">{order.returnDate}</td>
+                            <td className="text-[#ffffff] dark:text-black">{order.total}</td>
                         </tr>
                     ))}
                 </tbody>

@@ -98,7 +98,7 @@ function    CheckoutForm() {
                 
                 <Row className="mt-10 duration-200">
                     <Col md={6}>
-                      <button className="w-full h-[50px] capitalize dark:bg-[#181818] bg-[#F0F0F0] dark:text-[#F5F5F5] text-[1.3rem] font-medium  text-[#303030] rounded-xl hover:scale-[1.03] duration-300"
+                      <button className=" cursor-pointer w-full h-[50px] capitalize dark:bg-[#181818] bg-[#F0F0F0] dark:text-[#F5F5F5] text-[1.3rem] font-medium  text-[#303030] rounded-xl hover:scale-[1.03] duration-300"
                       type="submit" disabled={user.cart.count <= 0 || paying || isSuccess}>
                         {paying ? "Processing..." : "Borrow"}
                     </button>

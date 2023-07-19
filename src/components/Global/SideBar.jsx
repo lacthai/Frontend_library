@@ -18,6 +18,7 @@ import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import { useDispatch, useSelector } from "react-redux";
+import DashboardIcon from '@mui/icons-material/Dashboard';
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   
@@ -118,6 +119,8 @@ const Sidebar = () => {
           )}
 
           <Box paddingLeft={isCollapsed ? undefined : "10%"}>
+            {!user.isAdmin && (
+
             <Item
               title="Home"
               to="/"
@@ -125,6 +128,17 @@ const Sidebar = () => {
               selected={selected}
               setSelected={setSelected}
             />
+            )}
+            {user.isAdmin && (
+            <Item
+              title="DashBoard"
+              to="/"
+              icon={<DashboardIcon/>}
+              selected={selected}
+              setSelected={setSelected}
+            />
+
+            )}
             <Typography
               sx={{ m: "15px 0 5px 20px" }}
               className="text-[0.8rem] text-[#909090] dark:text-[#484848]"
@@ -211,7 +225,7 @@ const Sidebar = () => {
             )}
             {user.isAdmin && (
               <Item
-                title="Create Product"
+                title="Create Books"
                 to="/new-product"
                 icon={<BookmarkAddIcon />}
                 selected={selected}

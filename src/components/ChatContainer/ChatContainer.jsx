@@ -1,181 +1,172 @@
-// import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useState } from "react";
+import { useRef } from "react";
 
-// import ChatInput from "./ChatInput";
-// import { v4 as uuidv4 } from "uuid";
-// import axios from "axios";
-// import { sendMessageRoute, recieveMessageRoute } from "../utils/APIRoutes";
-// import {BsThreeDots } from "react-icons/bs";
-// const ChatContainer = ({ currentChat, socket }) => {
-//   const [messages, setMessages] = useState([]);
-//   const scrollRef = useRef();
-//   const [arrivalMessage, setArrivalMessage] = useState(null);
+import { useGetMessagesMutation, useAddMessageMutation } from "../../services/appApi";
+import { useGetUserMutation } from "../../services/appApi";
+import "./ChatContainer.css";
+import { format } from "timeago.js";
+import InputEmoji from 'react-input-emoji'
 
-//   useEffect(() => {
-//     const CurrentChatUser = async () => {
-//         const data = await JSON.parse(
-//           localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)
-//         );
-//         const response = await axios.post(recieveMessageRoute, {
-//           from: data._id,
-//           to: currentChat._id,
-//         });
-//         setMessages(response.data);
-//     }
-//     CurrentChatUser();
-//   }, [currentChat]);
+const ChatContainer = ({ chat, currentUser, setSendMessage,  receivedMessage }) => {
+  const [userData, setUserData] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState("");
+  const [getUser] = useGetUserMutation({});
+  const [getMessages] = useGetMessagesMutation({});
+  const [addMessage] = useAddMessageMutation({});
 
-//   useEffect(() => {
-//     const getCurrentChat = async () => {
-//       if (currentChat) {
-//         await JSON.parse(
-//           localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)
-//         )._id;
-//       }
-//     };
-//     getCurrentChat();
-//   }, [currentChat]);
 
-//   const handleSendMsg = async (msg) => {
-//     const data = await JSON.parse(
-//       localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)
-//     );
-//     socket.current.emit("send-msg", {
-//       to: currentChat._id,
-//       from: data._id,
-//       msg,
-//     });
-//     await axios.post(sendMessageRoute, {
-//       from: data._id,
-//       to: currentChat._id,
-//       message: msg,
-//     });
+  const handleChange = (newMessage)=> {
+    setNewMessage(newMessage)
+  }
 
-//     const msgs = [...messages];
-//     msgs.push({ fromSelf: true, message: msg });
-//     setMessages(msgs);
-//   };
+  // fetching data for header
+  useEffect(() => {
+    const userId = chat?.members?.find((id) => id !== currentUser);
+    const getUserData = async () => {
+      try {
+        const { data } = await getUser(userId);
+        setUserData(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
-//   useEffect(() => {
-//     if (socket.current) {
-//       socket.current.on("msg-recieve", (msg) => {
-//         setArrivalMessage({ fromSelf: false, message: msg });
-//       });
-//     }
-//   }, []);
+    if (chat !== null) getUserData();
+  }, [chat, currentUser]);
 
-//   useEffect(() => {
-//     arrivalMessage && setMessages((prev) => [...prev, arrivalMessage]);
-//   }, [arrivalMessage]);
+  // fetch messages
+  useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        const { data } = await getMessages(chat._id);
+        setMessages(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
-//   useEffect(() => {
-//     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
-//   }, [messages]);
+    if (chat !== null) fetchMessages();
+  }, [chat]);
 
-//   return (
-//     <Container>
-//       <div className="chat-header dark:bg-[#414a4c] bg-[#d29914]">
-//         <div className="user-details">
-//           <div className="avatar">
-//             <img
-//               src={`data:image/svg+xml;base64,${currentChat.avatarImage}`}
-//               alt=""
-//             />
-//           </div>
-//           <div className="username">
-//             <h3 className="dark:text-white text-black">{currentChat.username}</h3>
-//           </div>
-//         </div>
-//         <BsThreeDots className="text-[2rem] dark:text-[white] text-black cursor-pointer" />
-//       </div>
-//       <div className="chat-messages">
-//         {messages.map((message) => {
-//           return (
-//             <div ref={scrollRef} key={uuidv4()}>
-//               <div
-//                 className={`message ${
-//                   message.fromSelf ? "sended" : "recieved"
-//                 }`}
-//               >
-//                 <div className="content dark:bg-[#4f04ff21] bg-[#faf0be]">
-//                   <p className="dark:text-white text-black">{message.message}</p>
-//                 </div>
-//               </div>
-//             </div>
-//           );
-//         })}
-//       </div>
-//       <ChatInput handleSendMsg={handleSendMsg} />
-//     </Container>
-//   );
-// }
 
-// const Container = styled.div`
-//   display: grid;
-//   grid-template-rows: 15% 75% 10%;
-//   gap: 0.1rem;
-//   overflow: hidden;
-//   border-bottom-right-radius: 25px;
-//   @media screen and (min-width: 720px) and (max-width: 1080px) {
-//     grid-template-rows: 20% 65% 15%;
-//   }
-//   .chat-header {
-//     display: flex;
-//     justify-content: space-between;
-//     align-items: center;
-//     padding: 0rem 2rem;
-//     border-top-right-radius: 25px;
-//     overflow: hidden;
-//     .user-details {
-//       display: flex;
-//       align-items: center;
-//       gap: 1rem;
-//       .avatar {
-//         img {
-//           height: 3rem;
-//         }
-//       }
-//     }
-//   }
-//   .chat-messages {
-//     padding: 1rem 2rem;
-//     display: flex;
-//     flex-direction: column;
-//     gap: 1rem;
-//     overflow: auto;
-//     &::-webkit-scrollbar {
-//       width: 0.2rem;
-//       &-thumb {
-//         background-color: #ffffff39;
-//         width: 0.1rem;
-//         border-radius: 1rem;
-//       }
-//     }
-//     .message {
-//       display: flex;
-//       align-items: center;
-//       .content {
-//         max-width: 40%;
-//         overflow-wrap: break-word;
-//         padding: 1rem;
-//         font-size: 1.1rem;
-//         border-radius: 1rem;
-//         color: #d1d1d1;
-//         @media screen and (min-width: 720px) and (max-width: 1080px) {
-//           max-width: 70%;
-//         }
-//       }
-//     }
-//     .sended {
-//       justify-content: flex-end;
-      
-//     }
-//     .recieved {
-//       justify-content: flex-start;
-//       .content {
-//         background-color: #9900ff20;   
-//       }
-//     }
-//   }
-// `;
+  // Always scroll to last Message
+  useEffect(()=> {
+    scroll.current?.scrollIntoView({ behavior: "smooth" });
+  },[messages])
 
-// export default ChatContainer;
+
+
+  // Send Message
+  const handleSend = async(e)=> {
+    e.preventDefault()
+    const message = {
+      senderId : currentUser,
+      text: newMessage,
+      chatId: chat._id,
+  }
+  const receiverId = chat.members.find((id)=>id!==currentUser);
+  // send message to socket server
+  setSendMessage({...message, receiverId})
+  // send message to database
+  try {
+    const { data } = await addMessage(message);
+    setMessages([...messages, data]);
+    setNewMessage("");
+  }
+  catch
+  {
+    console.log("error")
+  }
+}
+
+// Receive Message from parent component
+useEffect(()=> {
+  console.log("Message Arrived: ", receivedMessage)
+  if (receivedMessage !== null && receivedMessage.chatId === chat._id) {
+    setMessages([...messages, receivedMessage]);
+  }
+
+},[receivedMessage])
+
+
+
+  const scroll = useRef();
+  const imageRef = useRef();
+  return (
+    <>
+      <div className="ChatBox-container">
+        {chat ? (
+          <>
+            {/* chat-header */}
+            <div className="chat-header">
+              <div className="follower">
+                <div>
+                  <img
+                    src={
+                      userData.photoURL
+                    }
+                    alt="Profile"
+                    className="followerImage"
+                    style={{ width: "50px", height: "50px" }}
+                  />
+                  <div className="name" style={{ fontSize: "0.9rem" }}>
+                    <span>
+                      {userData?.name}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <hr
+                style={{
+                  width: "95%",
+                  border: "0.1px solid #ececec",
+                  marginTop: "20px",
+                }}
+              />
+            </div>
+            {/* chat-body */}
+            <div className="chat-body" >
+              {messages.map((message) => (
+                <>
+                  <div ref={scroll}
+                    className={
+                      message.senderId === currentUser
+                        ? "message own"
+                        : "message"
+                    }
+                  >
+                    <span>{message.text}</span>{" "}
+                    <span>{format(message.createdAt)}</span>
+                  </div>
+                </>
+              ))}
+            </div>
+            {/* chat-sender */}
+            <div className="chat-sender">
+              <div onClick={() => imageRef.current.click()}>+</div>
+              <InputEmoji
+                value={newMessage}
+                onChange={handleChange}
+              />
+              <div className="send-button button" onClick = {handleSend}>Send</div>
+              <input
+                type="file"
+                name=""
+                id=""
+                style={{ display: "none" }}
+                ref={imageRef}
+              />
+            </div>{" "}
+          </>
+        ) : (
+          <span className="chatbox-empty-message">
+            Tap on a chat to start conversation...
+          </span>
+        )}
+      </div>
+    </>
+  );
+};
+
+export default ChatContainer;

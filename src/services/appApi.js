@@ -24,15 +24,43 @@ export const appApi = createApi({
             }),
         }),
 
-        updateUser: builder.mutation({
-            query: (body) => ({
-                url: `/users/profile`,
-                body,
-                method: "PUT",
+        //get one user 
+        getUser: builder.mutation({
+            query: (userId) => ({
+                url: `/users/${userId}`,
+                method: "GET",
+                body: userId,
             }),
         }),
 
+        //get all user
+
+        getAllUser: builder.mutation({
+            query: (body) => ({
+                url: "/users",
+                method: "GET",
+                body,
+            }),
+        }),
+
+        //update profile
+
+        updateProfile: builder.mutation({
+            query: (user) => ({
+              url: `users/${user.id}/updateprofile`,
+              method: "PATCH" ,
+              body: user,
+            }),
+          }),
         // creating product
+        updateProduct: builder.mutation({
+            query: (product) => ({
+                url: `/products/${product.id}`,
+                body: product,
+                method: "PATCH",
+            }),
+        }),
+
         createProduct: builder.mutation({
             query: (product) => ({
                 url: "/products",
@@ -51,13 +79,6 @@ export const appApi = createApi({
             }),
         }),
 
-        updateProduct: builder.mutation({
-            query: (product) => ({
-                url: `/products/${product.id}`,
-                body: product,
-                method: "PATCH",
-            }),
-        }),
 
         // add to cart
         addToCart: builder.mutation({
@@ -101,13 +122,52 @@ export const appApi = createApi({
                 body,
             }),
         }),
+        //create chat
+        createChat: builder.mutation({
+            query: (data) => ({
+                url: "/chat",
+                method: "POST",
+                body: data,
+            }),
+        }),
+        //user chat 
+        userChats : builder.mutation({
+            query: (id) => ({
+                url: `/chat/${id}`,
+                method: "GET",
+                body: id,
+            })
+        }),
+        //find a chat
+        findChat: builder.mutation({
+            query: (firstId, secondId) => ({
+                url: `/chat/find/${firstId}/${secondId}`,
+                method: "GET",
+                body: {firstId,secondId},
+            })
+        }),
+        //get message 
+        getMessages: builder.mutation({
+            query: (id) => ({
+                url: `/message/${id}`,
+                method: "GET",
+                body: id,
+            })
+        }),
+        //add message
+        addMessage : builder.mutation({
+            query: (data) => ({
+                url: "/message",
+                method: "POST",
+                body: data,
+            })
+        })
     }),
 });
 
 export const {
     useSignupMutation,
     useLoginMutation,
-    useUpdateProfileMutation,
     useCreateProductMutation,
     useAddToCartMutation,
     useRemoveFromCartMutation,
@@ -116,6 +176,15 @@ export const {
     useCreateOrderMutation,
     useDeleteProductMutation,
     useUpdateProductMutation,
+    useCreateChatMutation,
+    useUserChatsMutation,
+    useFindChatMutation,
+    useGetAllUserMutation,
+    useGetUserMutation,
+    useAddMessageMutation,
+    useGetMessagesMutation,
+    useUpdateProfileMutation,
 } = appApi;
 
 export default appApi;
+

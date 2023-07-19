@@ -31,7 +31,7 @@ const Notifications = () => {
   return (
     <div className="h-[120vh] flex justify-center">
       <div className="conatiner-notifications w-[90%] h-fit rounded-lg flex justify-center items-center flex-col">
-        <p className=" font-semibold m-6">
+        <p className=" font-semibold m-6 text-[#ffffff] dark:text-black">
           Check your messages and pay attention to the return deadlines
         </p>
         {dataNotification.map((key) => (
@@ -41,8 +41,8 @@ const Notifications = () => {
                 <MdNotificationImportant className="text-[1.3rem] text-[#C60C30]" />
               </div>
               <div className="h-[100%] ml-[4rem] flex justify-center items-center">
-                <p className="mr-5">ID: {key.id}</p>
-                <p className="">{key.product}</p>
+                <p className="mr-5 text-[#ffffff] dark:text-black">ID: {key.id}</p>
+                <p className="text-[#ffffff] dark:text-black">{key.product}</p>
               </div>
               <p className="text-[#B8B8B8] mr-2">{key.time}</p>
               <div className=" absolute h-[50px] bg-[#dcdddf] w-[2px] left-[5%] bottom-[0px] translate-y-full z-[-1]">

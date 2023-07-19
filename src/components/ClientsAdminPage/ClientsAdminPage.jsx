@@ -25,13 +25,16 @@ function ClientsAdminPage() {
             });
     }, []);
 
+
+    const noAdminUser = users.filter(user => !user.isAdmin);
+
     if (loading) return <Loading />;
-    if (users?.length === 0) return <h2 className="py-2 text-center">No users yet</h2>;
+    if (noAdminUser?.length === 0) return <h2 className="py-2 text-center">No users yet</h2>;
 
     return (
         <div className="h-[150vh]">
 
-        <Table responsive striped bordered hover className="text-white h-[40%]">
+        <Table responsive striped bordered hover className="text-white dark:text-black h-[40%]">
             <thead>
                 <tr>
                     <th>User Id</th>
@@ -40,11 +43,11 @@ function ClientsAdminPage() {
                 </tr>
             </thead>
             <tbody>
-                {users.map((user) => (
+                {noAdminUser.map((user) => (
                     <tr>
-                        <td className="text-white"><span className="backdrop-opacity-10 backdrop-invert bg-white/30 p-2 rounded-xl flex items-center w-fit"><Grid3x3TwoToneIcon className="mr-1 text-[#71BC78]"/>{user._id}</span></td>
-                        <td className="text-white capitalize"><span className="backdrop-opacity-10 backdrop-invert bg-white/30 p-2 rounded-xl flex items-center w-fit"><DriveFileRenameOutlineTwoToneIcon className="mr-1 text-[#4B9CD3]"/>{user.name}</span></td>
-                        <td className="text-white"><span className="backdrop-opacity-10 backdrop-invert bg-white/30 p-2 rounded-xl flex items-center w-fit"><AlternateEmailTwoToneIcon className="mr-1 text-[#E31837]"/>{user.email}</span></td>
+                        <td className="text-white dark:text-black"><span className="backdrop-opacity-10 backdrop-invert bg-white/30 p-2 rounded-xl flex items-center w-fit"><Grid3x3TwoToneIcon className="mr-1 text-[#71BC78]"/>{user._id}</span></td>
+                        <td className="text-white dark:text-black capitalize"><span className="backdrop-opacity-10 backdrop-invert bg-white/30 p-2 rounded-xl flex items-center w-fit"><DriveFileRenameOutlineTwoToneIcon className="mr-1 text-[#4B9CD3]"/>{user.name}</span></td>
+                        <td className="text-white dark:text-black"><span className="backdrop-opacity-10 backdrop-invert bg-white/30 p-2 rounded-xl flex items-center w-fit"><AlternateEmailTwoToneIcon className="mr-1 text-[#E31837]"/>{user.email}</span></td>
                     </tr>
                 ))}
             </tbody>

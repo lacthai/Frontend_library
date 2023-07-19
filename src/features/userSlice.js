@@ -1,9 +1,13 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 
 // appApi
-import appApi, { useUpdateProfileMutation } from "../services/appApi";
+import appApi from "../services/appApi";
 
 const initialState = null;
+
+
+
 
 export const userSlice = createSlice(
   {
@@ -64,35 +68,21 @@ export const userSlice = createSlice(
     },
   },
   {
-    name: "user",
-    initialState: { name: "", email: "", photoURL: "" },
+    nname: 'profile',
+    initialState,
     reducers: {
-      updateProfile: (state, action) => {
-        const { name, email, photoURL } = action.payload;
-        state.name = name;
-        state.email = email;
-        state.photoURL = photoURL;
-      },
+        updateProfiles: (_, action) => {
+            return action.payload;
+        },
+    },
+    extraReducers: (builder) => {
+        builder.addMatcher(appApi.endpoints.updateProfile.matchFulfilled, (_, { payload }) => payload);
     },
   }
 );
-export const {
-  logout,
-  addNotification,
-  resetNotifications,
-  updateProfile,
-  setUser,
-  clearUser,
-} = userSlice.actions;
+export const { logout, addNotification, setUser, clearUser, updateProfiles } =
+  userSlice.actions;
 
 
-export const updateProfileAsync = (body) => async (dispatch) => {
-    try {
-      const { data } = await useUpdateProfileMutation(body);
-      dispatch(updateProfile(data));
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
 export default userSlice.reducer;

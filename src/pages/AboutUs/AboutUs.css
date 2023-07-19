@@ -1,5 +1,4 @@
 .about-us_header {
-    width: 100%;
     min-height: 200px;
     display: grid;
     grid-template-columns: 15% 70% 15%;
@@ -29,6 +28,7 @@
     height: 900px;
     gap: 10px;
     margin-bottom: 50px;
+    width: 100%;
 }
 
 .about-us_body img {

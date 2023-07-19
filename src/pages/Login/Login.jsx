@@ -67,7 +67,7 @@ function Login() {
         </div>
       </div>
       <Form onSubmit={handleLogin} className="w-[35%] h-[70%] backdrop-sepia-0 bg-white/60 border-solid border-4 border-white/50 rounded-xl flex items-center flex-col ">
-        <h1 className="login-form_title text-[4rem] text-[#318CE7]">E-Library</h1>
+        <h1 className="login-form_title text-[1.8rem] sm:text-[2.5rem] md:text-[3rem] lg:text-[3.5rem] xl:text-[4rem] text-[#318CE7]">E-Library</h1>
         <GiSecretBook className="text-[2rem] text-[#008B8B] "/>
         {/* {isError && <Alert variant="danger">{error.data}</Alert>} */}
         <divp className="w-[75%] my-[20px]">
